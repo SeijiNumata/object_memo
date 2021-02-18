@@ -3,11 +3,11 @@ const argv = require('minimist')(process.argv.slice(2), {})
 
 class File {
   constructor () {
-    function getUniqueStr (myStrong) {
+    function getUniqueStr (myRandomRange) {
       // マイクロ秒単位で乱数を変化
-      let strong = 1000
-      if (myStrong) strong = myStrong
-      return new Date().getTime().toString(16) + Math.floor(strong * Math.random()).toString(16)
+      let randomRange = 1000
+      if (myRandomRange) randomRange = myRandomRange
+      return new Date().getTime().toString(16) + Math.floor(randomRange * Math.random()).toString(16)
     }
     this.fileName = getUniqueStr()
   }
@@ -79,7 +79,11 @@ if (argv.l) {
 } else if (argv.d) {
   files.selectFiles(files.oneLines, 'Choose a note you want to delete:')
     .then((data) => {
-      return fs.unlink(data)
+      return fs.unlink(data, function (err) {
+        if (err) {
+          throw (err)
+        }
+      })
     })
 } else if (Object.keys(argv).length === 1) {
   const file = new File()
